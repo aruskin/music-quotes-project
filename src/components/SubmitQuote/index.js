@@ -127,7 +127,8 @@ function QuoteForm(){
             speaker: speaker.selected,
             subject: subjects.map((item, index) => item.selected)
         };
-        return(submitQuote(body));
+        submitQuote(body)
+            .then(() => alert('Quote submitted!'));
     }
 
     return(
