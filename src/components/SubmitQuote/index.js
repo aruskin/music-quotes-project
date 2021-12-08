@@ -27,7 +27,6 @@ function QuoteForm(){
     function renderSelectOptions(myState, setMyState, selectId, index=null){
         var items;
         var artists;
-        console.log(index);
         if(index !== null){
             artists = myState[index].selectOptions;
         } else{
@@ -66,7 +65,6 @@ function QuoteForm(){
 
     function renderSubjectSelect(index){
         function handleSubjectChange(event){
-            console.log(event.target.value)
             return(setSubjects(oldValues =>
                 [...oldValues.slice(0, index),
                 {keyword: event.target.value, selectOptions: [], selected: null},
@@ -115,9 +113,8 @@ function QuoteForm(){
             ...quote,
             speaker: speaker.selected,
             subject: subjects.map((item, index) => item.selected)
-        }
-        console.log(body)
-        return(submitQuote(quote))
+        };
+        return(submitQuote(body));
     }
 
     return(
