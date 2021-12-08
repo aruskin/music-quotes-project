@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import NavigationSidebar from "../NavigationSidebar";
-import userService from '../../services/user-service';
+//import userService from '../../services/user-service';
 import musicbrainzService from '../../services/musicbrainz-service';
 import {submitQuote} from '../../services/quote-service';
 
@@ -10,7 +10,7 @@ function QuoteForm(){
     const [subjects, setSubjects] = useState([{keyword: '', selectOptions: [], selected: null}]);
     let [quote, setQuote] = useState({
         text: '',
-        source: null,
+        source: '',
         sourceDate: null,
         sourceURL: null});
 
@@ -19,7 +19,7 @@ function QuoteForm(){
         setSubjects([{keyword: '', selectOptions: [], selected: null}]);
         setQuote({
                  text: '',
-                 source: null,
+                 source: '',
                  sourceDate: null,
                  sourceURL: null});
     }
@@ -44,7 +44,11 @@ function QuoteForm(){
         }
         if(artists){
             items = artists.map(function(item, index) {
-                return (<option key={index} value={item.id}>{item.name}</option>)
+                return (<option
+                    key={index}
+                    value={item.id}>
+                    {item.name} {item.disambiguation ? `(${item.disambiguation})` : ``}
+                </option>)
             });
         }
         return(
@@ -86,7 +90,6 @@ function QuoteForm(){
             event.preventDefault();
             const artist = subjects[index].keyword;
             const artistResults = await musicbrainzService.fetchArtistsByName(artist);
-            var currentSubjects = subjects;
             return(setSubjects(oldValues =>
                  [...oldValues.slice(0, index),
                  {keyword: artist, selectOptions: artistResults, selected: null},
