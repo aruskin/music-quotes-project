@@ -14,6 +14,16 @@ function QuoteForm(){
         sourceDate: null,
         sourceURL: null});
 
+    function resetForm(event){
+        setSpeaker({keyword: '', selectOptions: [], selected: null});
+        setSubjects([{keyword: '', selectOptions: [], selected: null}]);
+        setQuote({
+                 text: '',
+                 source: null,
+                 sourceDate: null,
+                 sourceURL: null});
+    }
+
     function handleSpeakerChange(event){
         return(setSpeaker({keyword: event.target.value, selectOptions: [], selected: null}))
     }
@@ -188,8 +198,16 @@ function QuoteForm(){
                 onClick={appendInput}>Add Subject</button>
         </div>
         <div className="mt-2">
-            <button className="btn btn-primary">Submit</button>
+            <button
+                className="btn btn-primary"
+                type="submit">Submit</button>
         </div>
+        <div className="mt-2">
+            <button
+                className="btn btn-primary"
+                type="reset"
+                onClick={resetForm}>Reset Form</button>
+         </div>
     </form>
     )
 }
