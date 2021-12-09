@@ -13,6 +13,10 @@ export const submitQuote = (quote) =>
         }
     }).then(response => response.json())
 
+export const findQuoteByID = (id) =>
+    fetch(`${QUOTE_API}/${id}`)
+        .then(response => response.json())
+
 export default {
-    findAllQuotes, submitQuote
+    findAllQuotes, submitQuote, findQuoteByID
 }
