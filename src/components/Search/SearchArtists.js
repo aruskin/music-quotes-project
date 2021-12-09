@@ -16,7 +16,6 @@ function SearchArtists() {
 
     return (
             <div>
-              <h2>Search Artists</h2>
               <form onSubmit={handleSubmit}>
               <div className="input-group">
                 <input className="form-control"
