@@ -1,6 +1,7 @@
 import React, {useEffect, useState} from "react";
 import NavigationSidebar from "../NavigationSidebar";
 import quoteService from "../../services/quote-service";
+import Quote from "../Quote";
 
 function Home({user={}, loggedIn=false}){
     const [quotes, setQuotes] = useState([]);
@@ -32,9 +33,7 @@ function Home({user={}, loggedIn=false}){
                 <ul className="list-group">
                     {
                         quotes.map(quote =>
-                            <li key={quote._id} className="list-group-item">
-                                <p>{quote.text}</p>
-                                <p>Submission date: {quote.admin.submissionDate}</p></li>
+                            <Quote quote={quote}/>
                         )
                     }
                 </ul>
