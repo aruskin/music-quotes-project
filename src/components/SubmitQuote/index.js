@@ -46,7 +46,7 @@ function QuoteForm(){
             items = artists.map(function(item, index) {
                 return (<option
                     key={index}
-                    value={item.id}>
+                    value={JSON.stringify({mbid: item.id, name: item.name})}>
                     {item.name} {item.disambiguation ? `(${item.disambiguation})` : ``}
                 </option>)
             });
@@ -124,8 +124,8 @@ function QuoteForm(){
         event.preventDefault();
         const body = {
             ...quote,
-            speaker: speaker.selected,
-            subject: subjects.map((item, index) => item.selected)
+            speaker: {mbid: JSON.parse(speaker.selected).mbid, name: JSON.parse(speaker.selected).name},
+            subject: subjects.map((item, index) => ({mbid: JSON.parse(item.selected).mbid, name: JSON.parse(item.selected).name}))
         };
         submitQuote(body)
             .then(() => alert('Quote submitted!'));
