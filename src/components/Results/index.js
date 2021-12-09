@@ -1,14 +1,30 @@
 import React, {useState, useEffect} from "react";
 import {Link, useParams} from "react-router-dom";
 import musicbrainzService from '../../services/musicbrainz-service';
+import artistService from '../../services/artist-service';
 import NavigationSidebar from "../NavigationSidebar";
 
 function Results({loggedIn=false}) {
     const [artists, setArtists] = useState([]);
     let params = useParams();
 
+    async function getAndCombineArtists(keyword){
+        let musicbrainzResults = await musicbrainzService.fetchArtistsByName(params.criteria);
+        let combinedResults = [];
+
+        await Promise.all(musicbrainzResults.map(async (item, index) => {
+            const artist = await artistService.fetchArtistByMBID(item.id);
+            combinedResults.push(
+                {...item,
+                quotesFrom: artist ? artist.quotesFrom.length : 0,
+                quotesAbout: artist ? artist.quotesAbout.length : 0})
+        }));
+        console.log(combinedResults);
+        return(combinedResults)
+    }
+
     useEffect(() => {
-        musicbrainzService.fetchArtistsByName(params.criteria)
+        getAndCombineArtists(params.criteria)
             .then(artists => setArtists(artists));
         return () => {
             setArtists([])
@@ -29,8 +45,8 @@ function Results({loggedIn=false}) {
                         <th>{item.name}</th>
                         <th>{item.disambiguation}</th>
                         <th>{item.country}</th>
-                        <th></th>
-                        <th></th>
+                        <th>{item.quotesFrom}</th>
+                        <th>{item.quotesAbout}</th>
                         <th><Link to={detailsURL} type="button" className="btn btn-link">See Details</Link></th>
                    </tr>)
                  });
