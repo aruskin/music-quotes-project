@@ -20,25 +20,29 @@ function Artist({loggedIn, dispatch}){
         async function fetchArtistQuotes(mbid){
             let artistResult = await artistService.fetchArtistByMBID(mbid);
 
-            let quotesFrom = [];
-            if(artistResult.quotesFrom.length > 0){
-                console.log(artistResult.quotesFrom);
-                await Promise.all(artistResult.quotesFrom.map(async (item, index) => {
-                    console.log(item);
-                    const quote = await quoteService.findQuoteByID(item);
-                    quotesFrom.push(quote)
-                }))
-            }
-            let quotesAbout = [];
+            if(artistResult){
+                let quotesFrom = [];
 
-            if(artistResult.quotesAbout.length > 0){
-                await Promise.all(artistResult.quotesAbout.map(async (item, index) => {
-                    const quote = await quoteService.findQuoteByID(item);
-                    quotesAbout.push(quote)
-                }))
+                if(artistResult.quotesFrom.length > 0){
+                    console.log(artistResult.quotesFrom);
+                    await Promise.all(artistResult.quotesFrom.map(async (item, index) => {
+                        console.log(item);
+                        const quote = await quoteService.findQuoteByID(item);
+                        quotesFrom.push(quote)
+                    }))
+                }
+                let quotesAbout = [];
+
+                if(artistResult.quotesAbout.length > 0){
+                    await Promise.all(artistResult.quotesAbout.map(async (item, index) => {
+                        const quote = await quoteService.findQuoteByID(item);
+                        quotesAbout.push(quote)
+                    }))
+                }
+
+                setQuotes({quotesFrom: quotesFrom, quotesAbout: quotesAbout})
             }
 
-            setQuotes({quotesFrom: quotesFrom, quotesAbout: quotesAbout})
         }
 
         fetchArtist(params.mbid);

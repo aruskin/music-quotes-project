@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import Logout from '../User/Logout';
 
 
-function NavigationSidebar({active="", loggedIn=false, dispatch}){
+function NavigationSidebar({active='', loggedIn, dispatch}){
     return(
         <div>
             <div className="list-group">

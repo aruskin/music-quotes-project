@@ -3,7 +3,7 @@ import NavigationSidebar from "../NavigationSidebar";
 import quoteService from "../../services/quote-service";
 import Quote from "../Quote";
 
-function Home({user={}, loggedIn=false, dispatch}){
+function Home({user, loggedIn, dispatch}){
     const [quotes, setQuotes] = useState([]);
     const NQUOTES = 5;
     useEffect(() => quoteService.findAllQuotes()
