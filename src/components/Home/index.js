@@ -3,7 +3,7 @@ import NavigationSidebar from "../NavigationSidebar";
 import quoteService from "../../services/quote-service";
 import Quote from "../Quote";
 
-function Home({user={}, loggedIn=false}){
+function Home({user={}, loggedIn=false, dispatch}){
     const [quotes, setQuotes] = useState([]);
     const NQUOTES = 5;
     useEffect(() => quoteService.findAllQuotes()
@@ -17,7 +17,7 @@ function Home({user={}, loggedIn=false}){
     return(
         <div className="row mt-2">
             <div className="col-2">
-                        <NavigationSidebar active="home" user={user} loggedIn={loggedIn}/>
+                        <NavigationSidebar active="home" user={user} loggedIn={loggedIn} dispatch={dispatch}/>
             </div>
             <div className="col-10">
             <h1>Home</h1>

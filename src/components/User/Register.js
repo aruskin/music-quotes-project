@@ -5,7 +5,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import userService from '../../services/user-service'
 import NavigationSidebar from "../NavigationSidebar";
 
-const RegistrationForm = () => {
+function RegistrationForm(dispatch){
     const [credentials, setCredentials] = useState({username: '', password: '', validatedPassword: ''})
     let navigate = useNavigate();
     function handleRegistration(event){
@@ -21,6 +21,7 @@ const RegistrationForm = () => {
                             alert("That username is already taken");
                         } else {
                             navigate("/profile");
+                            dispatch({type: 'login'})
                         }
                     })
         }
@@ -65,15 +66,15 @@ const RegistrationForm = () => {
     )
 }
 
-function Register({loggedIn=false}){
+function Register({loggedIn, dispatch}){
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="login" loggedIn={loggedIn}/>
+                <NavigationSidebar active="login" loggedIn={loggedIn} dispatch={dispatch}/>
              </div>
             <div className="col-10">
                 <h1>Register</h1>
-                    {!loggedIn && <RegistrationForm/>}
+                    {!loggedIn && <RegistrationForm dispatch={dispatch}/>}
                     {loggedIn && <p>You have already registered</p>}
                 <h2>Project Requirements</h2>
                             <ol>

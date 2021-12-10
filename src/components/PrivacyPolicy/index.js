@@ -1,11 +1,11 @@
 import React from "react";
 import NavigationSidebar from "../NavigationSidebar";
 
-function PrivacyPolicy({loggedIn=false}){
+function PrivacyPolicy({loggedIn, dispatch}){
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="privacy" loggedIn={loggedIn}/>
+                <NavigationSidebar active="privacy" loggedIn={loggedIn} dispatch={dispatch}/>
             </div>
             <div className="col-10">
                 <h1>Privacy Policy</h1>

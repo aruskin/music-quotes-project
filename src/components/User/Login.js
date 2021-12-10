@@ -6,7 +6,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import userService from '../../services/user-service'
 import NavigationSidebar from "../NavigationSidebar";
 
-const LoginForm = () => {
+function LoginForm({dispatch}){
     const [credentials, setCredentials] = useState({username: '', password: ''})
     let navigate = useNavigate();
     function handleLogin(event){
@@ -16,7 +16,8 @@ const LoginForm = () => {
                 if(user === 0) {
                     alert("Login failed, please try again")
                 } else {
-                    navigate("/profile")
+                    dispatch({type: 'login'});
+                    navigate("/profile");
                 }
             })
     }
@@ -53,7 +54,7 @@ const LoginForm = () => {
     )
 }
 
-function Login({loggedIn=false}){
+function Login({loggedIn, dispatch}){
     return(
          <div className="row mt-2">
             <div className="col-2">
@@ -61,7 +62,7 @@ function Login({loggedIn=false}){
             </div>
             <div className="col-10">
                 <h1>Login</h1>
-                {!loggedIn && <LoginForm/>}
+                {!loggedIn && <LoginForm dispatch={dispatch}/>}
                 {loggedIn && <p>You are already logged in</p>}
                 <h2>Project Requirements</h2>
                 <ol>

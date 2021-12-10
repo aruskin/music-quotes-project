@@ -2,11 +2,11 @@ import React from "react";
 import SearchArtists from "./SearchArtists";
 import NavigationSidebar from "../NavigationSidebar";
 
-function Search({loggedIn=false}){
+function Search({loggedIn, dispatch}){
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="search" loggedIn={loggedIn}/>
+                <NavigationSidebar active="search" loggedIn={loggedIn} dispatch={dispatch}/>
             </div>
             <div className="col-10">
                 <h1>Search Artists</h1>

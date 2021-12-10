@@ -1,7 +1,9 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import Logout from '../User/Logout';
 
-function NavigationSidebar({active="", loggedIn=false}){
+
+function NavigationSidebar({active="", loggedIn=false, dispatch}){
     return(
         <div>
             <div className="list-group">
@@ -23,12 +25,12 @@ function NavigationSidebar({active="", loggedIn=false}){
                     <Link to="/submit" className={`list-group-item ${active === 'submit' ? 'active' : ''}`}>
                     Submit Quote
                     </Link>}
-                {loggedIn &&
-                    <div className={`list-group-item ${active === 'logout' ? 'active' : ''}`}>Logout</div>}
                 <Link to="/privacy" className={`list-group-item ${active === 'privacy' ? 'active' : ''}`}>
                     Privacy Policy
                 </Link>
             </div>
+            {loggedIn &&
+                <Logout dispatch={dispatch}/>}
         </div>
     )
 }

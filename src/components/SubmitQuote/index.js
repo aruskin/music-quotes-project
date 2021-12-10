@@ -216,11 +216,11 @@ function QuoteForm(){
     )
 }
 
-function SubmitQuote({user={}, loggedIn=false}){
+function SubmitQuote({user, loggedIn, dispatch}){
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="submit" user={user} loggedIn={loggedIn}/>
+                <NavigationSidebar active="submit" user={user} loggedIn={loggedIn} dispatch={dispatch}/>
             </div>
             <div className="col-10">
                 <h1>Submit Quote</h1>

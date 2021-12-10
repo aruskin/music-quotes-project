@@ -4,26 +4,25 @@ import musicbrainzService from '../../services/musicbrainz-service';
 import artistService from '../../services/artist-service';
 import NavigationSidebar from "../NavigationSidebar";
 
-function Results({loggedIn=false}) {
+function Results({loggedIn, dispatch}) {
     const [artists, setArtists] = useState([]);
     let params = useParams();
 
-    async function getAndCombineArtists(keyword){
-        let musicbrainzResults = await musicbrainzService.fetchArtistsByName(params.criteria);
-        let combinedResults = [];
-
-        await Promise.all(musicbrainzResults.map(async (item, index) => {
-            const artist = await artistService.fetchArtistByMBID(item.id);
-            combinedResults.push(
-                {...item,
-                quotesFrom: artist ? artist.quotesFrom.length : 0,
-                quotesAbout: artist ? artist.quotesAbout.length : 0})
-        }));
-        console.log(combinedResults);
-        return(combinedResults)
-    }
-
     useEffect(() => {
+        async function getAndCombineArtists(keyword){
+                let musicbrainzResults = await musicbrainzService.fetchArtistsByName(params.criteria);
+                let combinedResults = [];
+
+                await Promise.all(musicbrainzResults.map(async (item, index) => {
+                    const artist = await artistService.fetchArtistByMBID(item.id);
+                    combinedResults.push(
+                        {...item,
+                        quotesFrom: artist ? artist.quotesFrom.length : 0,
+                        quotesAbout: artist ? artist.quotesAbout.length : 0})
+                }));
+                combinedResults = combinedResults.sort((a, b) => b.score - a.score);
+                return(combinedResults)
+        }
         getAndCombineArtists(params.criteria)
             .then(artists => setArtists(artists));
         return () => {
@@ -40,7 +39,7 @@ function Results({loggedIn=false}) {
              .map(function(item, index) {
                var detailsURL = "/details/" + item.id
                return(
-                   <tr>
+                   <tr key={index}>
                         <th scope="row">{index + 1}</th>
                         <th>{item.name}</th>
                         <th>{item.disambiguation}</th>
@@ -54,7 +53,7 @@ function Results({loggedIn=false}) {
         return (
           <div>
           Found {numItems} results in Musicbrainz
-          <div class="table-responsive-sm">
+          <div className="table-responsive-sm">
           <table className="table table-striped table-sm">
               <thead className="thead-dark">
                   <tr>
@@ -78,7 +77,7 @@ function Results({loggedIn=false}) {
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="" loggedIn={loggedIn}/>
+                <NavigationSidebar active="" loggedIn={loggedIn} dispatch={dispatch}/>
             </div>
             <div className="col-10">
                 <h2>Results</h2>

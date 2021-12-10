@@ -3,7 +3,7 @@ import {useParams} from "react-router-dom";
 import userService from '../../services/user-service'
 import NavigationSidebar from "../NavigationSidebar";
 
-function Profile({user={}, loggedIn=false}){
+function Profile({user, loggedIn, dispatch}){
     const {userId} = useParams();
     const [otherUser, setOtherUser] = useState(null);
     useEffect(() => {
@@ -15,7 +15,7 @@ function Profile({user={}, loggedIn=false}){
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="profile" user={user} loggedIn={loggedIn}/>
+                <NavigationSidebar active="profile" user={user} loggedIn={loggedIn} dispatch={dispatch}/>
             </div>
             <div className="col-10">
                 <h1>Profile</h1>

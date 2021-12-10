@@ -6,7 +6,7 @@ import quoteService from "../../services/quote-service";
 import NavigationSidebar from "../NavigationSidebar";
 import Quote from "../Quote";
 
-function Artist({loggedIn=false}){
+function Artist({loggedIn, dispatch}){
     let params = useParams();
     const [artist, setArtist] = useState({name: ''});
     const [quotes, setQuotes] = useState({quotesFrom: [], quotesAbout: []})
@@ -69,7 +69,7 @@ function Artist({loggedIn=false}){
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="" loggedIn={loggedIn}/>
+                <NavigationSidebar active="" loggedIn={loggedIn} dispatch={dispatch}/>
             </div>
             <div className="col-10">
                 <h1>{artist.name} {artist.disambiguation && <span>({artist.disambiguation})</span>}</h1>
