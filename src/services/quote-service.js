@@ -8,6 +8,7 @@ export const submitQuote = (quote) =>
     fetch(QUOTE_API, {
         method: 'POST',
         body: JSON.stringify(quote),
+        credentials: 'include',
         headers: {
             'content-type': 'application/json'
         }

@@ -4,25 +4,27 @@ import userService from '../../services/user-service'
 import NavigationSidebar from "../NavigationSidebar";
 
 function Profile({user, loggedIn, dispatch}){
-    const {userId} = useParams();
+    const {userName} = useParams();
     const [otherUser, setOtherUser] = useState(null);
     useEffect(() => {
-        if(userId) {
-            userService.findUserByName(userId)
+        if(userName) {
+            userService.findUserByName(userName)
                 .then(otherUser => {setOtherUser(otherUser[0])})
         }
-    }, [userId]);
+        console.log(userName);
+    }, [userName]);
     return(
         <div className="row mt-2">
             <div className="col-2">
                 <NavigationSidebar active="profile" user={user} loggedIn={loggedIn} dispatch={dispatch}/>
             </div>
             <div className="col-10">
-                <h1>Profile</h1>
-                {!loggedIn && !otherUser && <p>Log in to see your profile page</p>}
-                {loggedIn && !otherUser && <p>Hello {user.username}, this is your page!</p>}
 
-                {otherUser && otherUser.username}
+                {loggedIn && !otherUser && <h1>User: {user.username}</h1>}
+                {otherUser && <h1>User: {otherUser.username}</h1>}
+
+                {!loggedIn && !userName && <p>Log in to see your profile page</p>}
+                {loggedIn && !otherUser && <p>Hello {user.username}, this is your page!</p>}
 
                 <h2>Submitted Quotes</h2>
 

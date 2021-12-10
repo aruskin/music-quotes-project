@@ -32,11 +32,7 @@ function App() {
           .then(currentUser => setUser(currentUser))
   ,[]);
 
-  //const [loggedIn, setLoggedIn] = useState(false);
-
   const [loggedIn, loggedInDispatch] = useReducer(loggedInReducer, false);
-
-  //useEffect(() => setLoggedIn(user.username ? true : false), [user])
   return (
     <BrowserRouter>
         <Routes>
@@ -44,7 +40,7 @@ function App() {
             <Route path="/login" element={<Login loggedIn={loggedIn} dispatch={loggedInDispatch}/>} />
             <Route path="/register" element={<Register loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
             <Route path="/profile" element={<Profile user={user} loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
-            <Route path="/profile/:userId" element={<Profile user={user} loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
+            <Route path="/profile/:userName" element={<Profile user={user} loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
             <Route path="/search" element={<Search loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
             <Route path="/results/:criteria" element={<Results loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
             <Route path="/details/:mbid" element={<Artist loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
