@@ -1,23 +1,22 @@
-//copied from https://github.com/jannunzi/wbdv-sp21-02-jannunzi-prototype-react/blob/main/src/components/users/login.js
-//refactored to use useNavigate instead of useHistory (react-router-dom v6 compatibility)
-
-import React, {useState} from 'react'
-import {Link, useNavigate} from 'react-router-dom'
+import React, {useState} from 'react';
+import {useDispatch, useSelector} from "react-redux";
+import {Link, useNavigate} from 'react-router-dom';
 import userService from '../../services/user-service'
 import NavigationSidebar from "../NavigationSidebar";
 
-function LoginForm({dispatch}){
+function LoginForm(){
     const [credentials, setCredentials] = useState({username: '', password: ''})
     let navigate = useNavigate();
+    let dispatch = useDispatch();
+
     function handleLogin(event){
        event.preventDefault();
-       userService.login(credentials)
+       userService.login(dispatch, credentials)
             .then((user) => {
                 if(user === 0) {
                     alert("Login failed, please try again")
                 } else {
-                    console.log(user);
-                    dispatch({type: 'login', payload: {username: user.username}});
+                    //dispatch({type: 'login', payload: {username: user.username}});
                     navigate("/profile");
                 }
             })
@@ -55,16 +54,18 @@ function LoginForm({dispatch}){
     )
 }
 
-function Login({loggedIn, dispatch}){
+function Login(){
+    const loggedIn = useSelector((state) => state.loggedIn);
     return(
          <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="login" loggedIn={loggedIn}/>
+                <NavigationSidebar active="login"/>
             </div>
             <div className="col-10">
                 <h1>Login</h1>
-                {!loggedIn && <LoginForm dispatch={dispatch}/>}
-                {loggedIn && <p>You are already logged in</p>}
+                {loggedIn ?
+                    <p>You are already logged in</p>
+                    : <LoginForm/>}
                 <h2>Project Requirements</h2>
                 <ol>
                 <li>Must allow users to register and create a new account</li>

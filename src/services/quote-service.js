@@ -18,6 +18,7 @@ export const findQuoteByID = (id) =>
     fetch(`${QUOTE_API}/${id}`)
         .then(response => response.json())
 
+/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
     findAllQuotes, submitQuote, findQuoteByID
 }

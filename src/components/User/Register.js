@@ -1,11 +1,14 @@
 import React, {useState} from 'react'
 import {Link, useNavigate} from 'react-router-dom'
+import {useDispatch, useSelector} from "react-redux";
 import userService from '../../services/user-service'
 import NavigationSidebar from "../NavigationSidebar";
 
-function RegistrationForm({dispatch}){
+function RegistrationForm(){
     const [credentials, setCredentials] = useState({username: '', password: '', validatedPassword: ''})
     let navigate = useNavigate();
+    let dispatch = useDispatch();
+
     function handleRegistration(event){
         event.preventDefault();
         if(credentials.password === '' || credentials.username === '') {
@@ -13,12 +16,11 @@ function RegistrationForm({dispatch}){
         } else if (credentials.password !== credentials.validatedPassword) {
             alert("Your passwords do not match")
         } else {
-            userService.register(credentials)
+            userService.register(dispatch, credentials)
                     .then((user) => {
                         if(user === 0) {
                             alert("That username is already taken");
                         } else {
-                            dispatch({type: 'login', payload: user});
                             navigate("/profile");
                         }
                     })
@@ -64,16 +66,18 @@ function RegistrationForm({dispatch}){
     )
 }
 
-function Register({loggedIn, dispatch}){
+function Register(){
+    const loggedIn = useSelector((state) => state.loggedIn);
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="login" loggedIn={loggedIn} dispatch={dispatch}/>
+                <NavigationSidebar active="login"/>
              </div>
             <div className="col-10">
                 <h1>Register</h1>
-                    {!loggedIn && <RegistrationForm dispatch={dispatch}/>}
-                    {loggedIn && <p>You have already registered</p>}
+                    {loggedIn ?
+                        <p>You have already registered</p>
+                        : <RegistrationForm/>}
             </div>
         </div>
     )

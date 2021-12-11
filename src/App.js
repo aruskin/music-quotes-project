@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useReducer} from "react";
+import React from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Home from './components/Home'
 import Login from './components/User/Login'
@@ -11,35 +11,30 @@ import Results from './components/Results'
 import PrivacyPolicy from './components/PrivacyPolicy'
 import SubmitQuote from './components/SubmitQuote'
 
-function loggedInReducer(state, action){
-    switch (action.type){
-        case 'login':
-            return {loggedIn: true, user: action.payload};
-        case 'logout':
-            return {loggedIn: false, user: {}};
-        default:
-            return state;
-    }
-}
+import currentUser from './reducers/users';
+import {createStore} from "redux";
+import {Provider} from "react-redux";
 
 function App() {
-
-  const initialState = {loggedIn: false, user: {}};
-  const [state, dispatch] = useReducer(loggedInReducer, initialState);
+  //const initialState = {loggedIn: false, user: {}};
+  const store = createStore(currentUser);
+  //const [state, dispatch] = useReducer(loggedInReducer, initialState);
   return (
     <BrowserRouter>
+        <Provider store={store}>
         <Routes>
-            <Route path="/" element={<Home user={state.user} loggedIn={state.loggedIn} />} />
-            <Route path="/login" element={<Login loggedIn={state.loggedIn} dispatch={dispatch}/>} />
-            <Route path="/register" element={<Register loggedIn={state.loggedIn} dispatch={dispatch}/>}/>
-            <Route path="/profile" element={<Profile user={state.user} loggedIn={state.loggedIn} dispatch={dispatch}/>}/>
-            <Route path="/profile/:userName" element={<Profile user={state.user} loggedIn={state.loggedIn} dispatch={dispatch}/>}/>
-            <Route path="/search" element={<Search loggedIn={state.loggedIn} dispatch={dispatch}/>}/>
-            <Route path="/results/:criteria" element={<Results loggedIn={state.loggedIn} dispatch={dispatch}/>}/>
-            <Route path="/details/:mbid" element={<Artist loggedIn={state.loggedIn} dispatch={dispatch}/>}/>
-            <Route path="/privacy" element={<PrivacyPolicy loggedIn={state.loggedIn} dispatch={dispatch}/>} />
-            <Route path="/submit" element={<SubmitQuote user={state.user} loggedIn={state.loggedIn} dispatch={dispatch}/>} />
+            <Route path="/" element={<Home/>} />
+            <Route path="/login" element={<Login/>} />
+            <Route path="/register" element={<Register/>}/>
+            <Route path="/profile" element={<Profile/>}/>
+            <Route path="/profile/:userName" element={<Profile/>}/>
+            <Route path="/search" element={<Search/>}/>
+            <Route path="/results/:criteria" element={<Results/>}/>
+            <Route path="/details/:mbid" element={<Artist/>}/>
+            <Route path="/privacy" element={<PrivacyPolicy/>} />
+            <Route path="/submit" element={<SubmitQuote/>} />
         </Routes>
+        </Provider>
     </BrowserRouter>
   );
 }

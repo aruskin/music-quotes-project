@@ -6,6 +6,7 @@ function fetchArtistByMBID(mbid) {
         .then(response => response.json())
 }
 
+/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
     fetchArtistByMBID
 }

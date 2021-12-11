@@ -1,9 +1,11 @@
 import React, {useEffect, useState} from "react";
+import {useSelector} from "react-redux";
 import NavigationSidebar from "../NavigationSidebar";
 import quoteService from "../../services/quote-service";
 import Quote from "../Quote";
 
-function Home({user, loggedIn, dispatch}){
+function Home(){
+    const user = useSelector((state) => state.user);
     const [quotes, setQuotes] = useState([]);
     const NQUOTES = 5;
     useEffect(() => quoteService.findAllQuotes()
@@ -16,7 +18,7 @@ function Home({user, loggedIn, dispatch}){
     return(
         <div className="row mt-2">
             <div className="col-2">
-                        <NavigationSidebar active="home" user={user} loggedIn={loggedIn} dispatch={dispatch}/>
+                        <NavigationSidebar active="home"/>
             </div>
             <div className="col-10">
             <h1>Home</h1>

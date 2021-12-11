@@ -1,16 +1,19 @@
 import React, {useEffect, useState} from "react";
 import {useParams, useNavigate} from "react-router-dom";
+import {useSelector} from "react-redux";
 import userService from '../../services/user-service';
 import quoteService from "../../services/quote-service";
 import NavigationSidebar from "../NavigationSidebar";
 import Quote from "../Quote";
 import MyProfile from "./MyProfile"
 
-function Profile({user, loggedIn, dispatch}){
+function Profile(){
     const {userName} = useParams();
     const [whoseProfile, setWhoseProfile] = useState({});
     const [submittedQuotes, setSubmittedQuotes] = useState([]);
     let navigate = useNavigate();
+    const user = useSelector((state) => state.user);
+    const loggedIn = useSelector((state) => state.loggedIn);
 
     useEffect(() => {
         async function fetchUserQuotes(user){
@@ -19,8 +22,8 @@ function Profile({user, loggedIn, dispatch}){
                 if(user.submittedQuotes.length > 0){
                     await Promise.all(user.submittedQuotes.map(async (item, index) => {
                         const quote = await quoteService.findQuoteByID(item);
-                        quotes.push(quote)
-                    }))
+                        quotes[index] = quote;
+                    }));
                 }
             }
             setSubmittedQuotes(quotes);
@@ -41,11 +44,7 @@ function Profile({user, loggedIn, dispatch}){
         if(whoseProfile){
             fetchUserQuotes(whoseProfile);
         }
-//        return () => {
-//            setWhoseProfile({});
-//            setSubmittedQuotes([]);
-//        };
-    }, [userName, whoseProfile, loggedIn, user, navigate]);
+    }, [userName, loggedIn, navigate, user.username, whoseProfile]);
 
     function displayUserInfo(){
         let accountCreationDate=new Date(whoseProfile.accountCreationDate);
@@ -62,10 +61,7 @@ function Profile({user, loggedIn, dispatch}){
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="profile"
-                    user={user}
-                    loggedIn={loggedIn}
-                    dispatch={dispatch}/>
+                <NavigationSidebar active="profile"/>
             </div>
             <div className="col-10">
                 {!loggedIn && !userName ?
@@ -81,7 +77,7 @@ function Profile({user, loggedIn, dispatch}){
                     </div>
                 : ''}
 
-                {loggedIn && !userName ? <MyProfile user={user}/>: ''}
+                {loggedIn && !userName ? <MyProfile/>: ''}
                 {userName && whoseProfile.username ? <h1>User: {whoseProfile.username}</h1> : ''}
 
                 {whoseProfile.username ?

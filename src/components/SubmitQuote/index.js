@@ -1,8 +1,9 @@
 import React, {useState} from "react";
+import {useSelector} from "react-redux";
 import NavigationSidebar from "../NavigationSidebar";
-//import userService from '../../services/user-service';
 import musicbrainzService from '../../services/musicbrainz-service';
 import {submitQuote} from '../../services/quote-service';
+
 
 
 function QuoteForm(){
@@ -216,16 +217,16 @@ function QuoteForm(){
     )
 }
 
-function SubmitQuote({user, loggedIn, dispatch}){
+function SubmitQuote(){
+    const loggedIn = useSelector((state) => state.loggedIn);
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="submit" user={user} loggedIn={loggedIn} dispatch={dispatch}/>
+                <NavigationSidebar active="submit"/>
             </div>
             <div className="col-10">
                 <h1>Submit Quote</h1>
-                {!loggedIn && <p>You must be logged in to submit a quote</p>}
-                {loggedIn && <QuoteForm/>}
+                {loggedIn ? <QuoteForm/> : <p>You must be logged in to submit a quote</p>}
             </div>
         </div>
     )

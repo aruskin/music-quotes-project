@@ -8,7 +8,7 @@ const profile = () => {
     }).then(response => response.json())
 }
 
-const login = (credentials) => {
+const login = (dispatch, credentials) => {
     return fetch(`${USER_API}/login`, {
         method: "POST",
         credentials: "include",
@@ -17,9 +17,10 @@ const login = (credentials) => {
             'content-type': 'application/json'
         }
     }).then(response => response.json())
+      .then(user => dispatch({type: 'login', payload: {username: user.username, role: user.role}}))
 }
 
-const register = (credentials) => {
+const register = (dispatch, credentials) => {
     return fetch(`${USER_API}/register`, {
         method: "POST",
         credentials: "include",
@@ -28,13 +29,14 @@ const register = (credentials) => {
             'content-type': 'application/json'
         }
     }).then(response => response.json())
+       .then(user => dispatch({type: 'login', payload: {username: user.username, role: user.role}}))
 }
 
-const logout = () => {
+const logout = (dispatch) => {
     return fetch(`${USER_API}/logout`, {
         method: "POST",
         credentials: "include"
-    }).then(() => {})
+    }).then(() => dispatch({type: 'logout'}))
 }
 
 const findUserByName = (username) => {
@@ -52,6 +54,7 @@ const resetPassword = (newPassword) => {
     }).then(response => response.json())
 }
 
+/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
     register, login, logout, profile, findUserByName, resetPassword
 }

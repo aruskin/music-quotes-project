@@ -10,7 +10,7 @@ function fetchArtistsByName(name) {
         .then(response => response.json())
         .then(json => json.artists)
 }
-
+/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
     fetchArtistByMBID, fetchArtistsByName
 }

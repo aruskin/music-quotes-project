@@ -1,9 +1,10 @@
 import React from "react";
+import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import Logout from '../User/Logout';
 
-
-function NavigationSidebar({active='', loggedIn, dispatch}){
+function NavigationSidebar({active=''}){
+    const loggedIn = useSelector((state) => state.loggedIn);
     return(
         <div>
             <div className="list-group">
@@ -30,7 +31,7 @@ function NavigationSidebar({active='', loggedIn, dispatch}){
                 </Link>
             </div>
             {loggedIn &&
-                <Logout dispatch={dispatch}/>}
+                <Logout/>}
         </div>
     )
 }

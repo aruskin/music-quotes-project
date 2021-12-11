@@ -4,7 +4,7 @@ import musicbrainzService from '../../services/musicbrainz-service';
 import artistService from '../../services/artist-service';
 import NavigationSidebar from "../NavigationSidebar";
 
-function Results({loggedIn, dispatch}) {
+function Results() {
     const [artists, setArtists] = useState([]);
     let params = useParams();
 
@@ -77,7 +77,7 @@ function Results({loggedIn, dispatch}) {
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="" loggedIn={loggedIn} dispatch={dispatch}/>
+                <NavigationSidebar active=""/>
             </div>
             <div className="col-10">
                 <h2>Results</h2>
