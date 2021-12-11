@@ -1,15 +1,16 @@
 import React, {useEffect, useState} from "react";
-import {useParams} from "react-router-dom";
+import {useParams, useNavigate} from "react-router-dom";
 import userService from '../../services/user-service';
 import quoteService from "../../services/quote-service";
 import NavigationSidebar from "../NavigationSidebar";
 import Quote from "../Quote";
-
+import MyProfile from "./MyProfile"
 
 function Profile({user, loggedIn, dispatch}){
     const {userName} = useParams();
     const [whoseProfile, setWhoseProfile] = useState({});
     const [submittedQuotes, setSubmittedQuotes] = useState([]);
+    let navigate = useNavigate();
 
     useEffect(() => {
         async function fetchUserQuotes(user){
@@ -25,8 +26,14 @@ function Profile({user, loggedIn, dispatch}){
 
             setSubmittedQuotes(quotes);
         }
-        if(userName) {
-            userService.findUserByName(userName)
+
+        let userNameVar = userName;
+        if(userName === user.username){
+            navigate("/profile");
+            userNameVar=null;
+        }
+        if(userNameVar) {
+            userService.findUserByName(userNameVar)
                 .then(whoseProfile => {setWhoseProfile(whoseProfile)});
         } else if(loggedIn){
             userService.findUserByName(user.username)
@@ -39,7 +46,7 @@ function Profile({user, loggedIn, dispatch}){
 //            setWhoseProfile({});
 //            setSubmittedQuotes([]);
 //        };
-    }, [userName, whoseProfile, loggedIn, user]);
+    }, [userName, whoseProfile, loggedIn, user, navigate]);
     return(
         <div className="row mt-2">
             <div className="col-2">
@@ -49,12 +56,16 @@ function Profile({user, loggedIn, dispatch}){
                     dispatch={dispatch}/>
             </div>
             <div className="col-10">
-                {!loggedIn && !userName ? <h1>Profile</h1> : ''}
-                {loggedIn && !userName && user.username ? <h1>User: {user.username}</h1>: ''}
-                {userName ? <h1>User: {whoseProfile.username}</h1> : ''}
+                {!loggedIn && !userName ?
+                    <div>
+                        <h1>Profile</h1>
+                        <p>Log in to see your profile page</p>
+                    </div>
+                : ''}
 
-                {!loggedIn && !userName && <p>Log in to see your profile page</p>}
-                {(loggedIn && (!userName || (userName === user.username))) ? <p>Hello {user.username}, this is your page!</p> : ''}
+                {loggedIn && !userName ? <MyProfile user={user}/>: ''}
+
+                {userName ? <h1>User: {whoseProfile.username}</h1> : ''}
 
                 <h2>Submitted Quotes</h2>
                 <ul className="list-group">
@@ -62,10 +73,10 @@ function Profile({user, loggedIn, dispatch}){
                 </ul>
 
                 <h2>Project Requirements</h2>
-                <ol style={{background: 'yellow'}}>
-                <li>Must allow users to change their personal information. If a user is logged in then they can see their profile including sensitive information such as email and phone</li>
+                <ol>
+                <li style={{background: 'yellow'}}>Must allow users to change their personal information. If a user is logged in then they can see their profile including sensitive information such as email and phone</li>
                 <li>Must be accessible to other users including anonymous users</li>
-                <li>Must hide personal/private information from others visiting the profile. If a user is visiting someone else's profile, then they can't see that other user's sensitive information</li>
+                <li style={{background: 'yellow'}}>Must hide personal/private information from others visiting the profile. If a user is visiting someone else's profile, then they can't see that other user's sensitive information</li>
                 <li>Must be mapped to "/profile" for displaying the profile of the currently logged in user</li>
                 <li>Must be mapped to "/profile/&#123;profileId&#125;" for displaying someone elses profile</li>
                 <li>Must group similar/related data into distinguishable groups, e.g., Following, Followers, Review, Favorites, etc.</li>
