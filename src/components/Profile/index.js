@@ -23,7 +23,6 @@ function Profile({user, loggedIn, dispatch}){
                     }))
                 }
             }
-
             setSubmittedQuotes(quotes);
         }
 
@@ -47,6 +46,19 @@ function Profile({user, loggedIn, dispatch}){
 //            setSubmittedQuotes([]);
 //        };
     }, [userName, whoseProfile, loggedIn, user, navigate]);
+
+    function displayUserInfo(){
+        let accountCreationDate=new Date(whoseProfile.accountCreationDate);
+        accountCreationDate=accountCreationDate.toDateString();
+
+        return(
+            <div>
+                <div><span className="fw-bold">Account created:</span> {accountCreationDate}</div>
+                <div><span className="fw-bold">User status:</span> {whoseProfile.role}</div>
+            </div>
+        )
+    }
+
     return(
         <div className="row mt-2">
             <div className="col-2">
@@ -63,18 +75,28 @@ function Profile({user, loggedIn, dispatch}){
                     </div>
                 : ''}
 
+                {userName && !whoseProfile.username ?
+                    <div><h1>Invalid user</h1>
+                        <p>No such user exists</p>
+                    </div>
+                : ''}
+
                 {loggedIn && !userName ? <MyProfile user={user}/>: ''}
+                {userName && whoseProfile.username ? <h1>User: {whoseProfile.username}</h1> : ''}
 
-                {userName ? <h1>User: {whoseProfile.username}</h1> : ''}
-
-                <h2>Submitted Quotes</h2>
-                <ul className="list-group">
-                    {submittedQuotes.map(quote => <Quote quote={quote} key={quote._id}/>)}
-                </ul>
+                {whoseProfile.username ?
+                    <div>
+                        {displayUserInfo()}
+                        <h2>Submitted Quotes</h2>
+                        <ul className="list-group">
+                            {submittedQuotes.map(quote => <Quote quote={quote} key={quote._id}/>)}
+                        </ul>
+                    </div>
+                : ''}
 
                 <h2>Project Requirements</h2>
                 <ol>
-                <li style={{background: 'yellow'}}>Must allow users to change their personal information. If a user is logged in then they can see their profile including sensitive information such as email and phone</li>
+                <li>Must allow users to change their personal information. If a user is logged in then they can see their profile including sensitive information such as email and phone</li>
                 <li>Must be accessible to other users including anonymous users</li>
                 <li style={{background: 'yellow'}}>Must hide personal/private information from others visiting the profile. If a user is visiting someone else's profile, then they can't see that other user's sensitive information</li>
                 <li>Must be mapped to "/profile" for displaying the profile of the currently logged in user</li>
