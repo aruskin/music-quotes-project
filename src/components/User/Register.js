@@ -71,7 +71,7 @@ function Register(){
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="login"/>
+                <NavigationSidebar active="register"/>
              </div>
             <div className="col-10">
                 <h1>Register</h1>
