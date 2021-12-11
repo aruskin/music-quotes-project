@@ -1,8 +1,19 @@
 import React, {useState} from "react";
+import userService from '../../services/user-service'
 
 function ResetPassword(){
     const [password, setPassword] = useState({newPassword: '', validatePassword: ''});
-    function handlePasswordReset(event){}
+    function handlePasswordReset(event){
+        event.preventDefault();
+        if(password.newPassword === ''){
+            alert("You must enter a new password");
+        } else if(password.newPassword !== password.validatePassword){
+            alert("Your passwords do not match");
+        } else{
+            userService.resetPassword(password.newPassword);
+            alert("Password reset!");
+        }
+    }
 
     return(
         <form>

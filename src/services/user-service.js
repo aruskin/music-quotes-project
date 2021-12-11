@@ -41,6 +41,17 @@ const findUserByName = (username) => {
     return fetch(`${USER_API}/${username}`).then(response => response.json())
 }
 
+const resetPassword = (newPassword) => {
+    return fetch(`${USER_API}/reset`, {
+        method: "POST",
+        credentials: "include",
+        body: JSON.stringify({newPassword: newPassword}),
+        headers: {
+            'content-type': 'application/json'
+        }
+    }).then(response => response.json())
+}
+
 export default {
-    register, login, logout, profile, findUserByName
+    register, login, logout, profile, findUserByName, resetPassword
 }
