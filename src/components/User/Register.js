@@ -18,7 +18,7 @@ function RegistrationForm({dispatch}){
                         if(user === 0) {
                             alert("That username is already taken");
                         } else {
-                            dispatch({type: 'login'});
+                            dispatch({type: 'login', payload: user});
                             navigate("/profile");
                         }
                     })

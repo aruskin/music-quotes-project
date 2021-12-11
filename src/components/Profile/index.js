@@ -1,34 +1,65 @@
 import React, {useEffect, useState} from "react";
 import {useParams} from "react-router-dom";
-import userService from '../../services/user-service'
+import userService from '../../services/user-service';
+import quoteService from "../../services/quote-service";
 import NavigationSidebar from "../NavigationSidebar";
+import Quote from "../Quote";
+
 
 function Profile({user, loggedIn, dispatch}){
     const {userName} = useParams();
-    const [otherUser, setOtherUser] = useState(null);
+    const [whoseProfile, setWhoseProfile] = useState({});
+    const [submittedQuotes, setSubmittedQuotes] = useState([]);
+
     useEffect(() => {
+        async function fetchUserQuotes(user){
+            let quotes = [];
+            if(user.submittedQuotes){
+                if(user.submittedQuotes.length > 0){
+                    await Promise.all(user.submittedQuotes.map(async (item, index) => {
+                        const quote = await quoteService.findQuoteByID(item);
+                        quotes.push(quote)
+                    }))
+                }
+            }
+
+            setSubmittedQuotes(quotes);
+        }
         if(userName) {
             userService.findUserByName(userName)
-                .then(otherUser => {setOtherUser(otherUser[0])})
+                .then(whoseProfile => {setWhoseProfile(whoseProfile)});
+        } else if(loggedIn){
+            userService.findUserByName(user.username)
+                .then(whoseProfile => {setWhoseProfile(whoseProfile)});
         }
-        console.log(userName);
-    }, [userName]);
+        if(whoseProfile){
+            fetchUserQuotes(whoseProfile);
+        }
+//        return () => {
+//            setWhoseProfile({});
+//            setSubmittedQuotes([]);
+//        };
+    }, [userName, whoseProfile, loggedIn, user]);
     return(
         <div className="row mt-2">
             <div className="col-2">
-                <NavigationSidebar active="profile" user={user} loggedIn={loggedIn} dispatch={dispatch}/>
+                <NavigationSidebar active="profile"
+                    user={user}
+                    loggedIn={loggedIn}
+                    dispatch={dispatch}/>
             </div>
             <div className="col-10">
-
-                {loggedIn && !otherUser && <h1>User: {user.username}</h1>}
-                {otherUser && <h1>User: {otherUser.username}</h1>}
+                {!loggedIn && !userName ? <h1>Profile</h1> : ''}
+                {loggedIn && !userName && user.username ? <h1>User: {user.username}</h1>: ''}
+                {userName ? <h1>User: {whoseProfile.username}</h1> : ''}
 
                 {!loggedIn && !userName && <p>Log in to see your profile page</p>}
-                {loggedIn && !otherUser && <p>Hello {user.username}, this is your page!</p>}
+                {(loggedIn && (!userName || (userName === user.username))) ? <p>Hello {user.username}, this is your page!</p> : ''}
 
                 <h2>Submitted Quotes</h2>
-
-                {loggedIn && !otherUser && <h3>Pending Approval</h3>}
+                <ul className="list-group">
+                    {submittedQuotes.map(quote => <Quote quote={quote} key={quote._id}/>)}
+                </ul>
 
                 <h2>Project Requirements</h2>
                 <ol style={{background: 'yellow'}}>

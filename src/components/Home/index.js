@@ -9,7 +9,6 @@ function Home({user, loggedIn, dispatch}){
     useEffect(() => quoteService.findAllQuotes()
         .then(quotes => {
             if (quotes.length > NQUOTES) {
-                console.log(quotes.length);
                 quotes = quotes.slice(0, NQUOTES);
             }
             setQuotes(quotes);
@@ -21,6 +20,7 @@ function Home({user, loggedIn, dispatch}){
             </div>
             <div className="col-10">
             <h1>Home</h1>
+            {user.username ? <div>Welcome back, {user.username}!</div> : ''}
             <h2>Project requirements</h2>
             <ol>
                 <li>Must be mapped to either the root context ("/") or ("/home").</li>
@@ -33,7 +33,7 @@ function Home({user, loggedIn, dispatch}){
                 <ul className="list-group">
                     {
                         quotes.map(quote =>
-                            <Quote quote={quote}/>
+                            <Quote quote={quote} key={quote._id}/>
                         )
                     }
                 </ul>

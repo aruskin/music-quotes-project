@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useEffect, useState, useReducer} from "react";
+import React, {useReducer} from "react";
 import {BrowserRouter, Route, Routes} from "react-router-dom";
 import Home from './components/Home'
 import Login from './components/User/Login'
@@ -11,41 +11,34 @@ import Results from './components/Results'
 import PrivacyPolicy from './components/PrivacyPolicy'
 import SubmitQuote from './components/SubmitQuote'
 
-import userService from './services/user-service'
-
 function loggedInReducer(state, action){
     switch (action.type){
         case 'login':
-            return true;
+            return {loggedIn: true, user: action.payload};
         case 'logout':
-            return false;
+            return {loggedIn: false, user: {}};
         default:
-            return false;
+            return state;
     }
 }
 
 function App() {
-  const [user, setUser] = useState({});
-  useEffect(() =>
-      userService.profile()
-          .catch(error => {console.log(error);})
-          .then(currentUser => setUser(currentUser))
-  ,[]);
 
-  const [loggedIn, loggedInDispatch] = useReducer(loggedInReducer, false);
+  const initialState = {loggedIn: false, user: {}};
+  const [state, dispatch] = useReducer(loggedInReducer, initialState);
   return (
     <BrowserRouter>
         <Routes>
-            <Route path="/" element={<Home user={user} loggedIn={loggedIn} />} />
-            <Route path="/login" element={<Login loggedIn={loggedIn} dispatch={loggedInDispatch}/>} />
-            <Route path="/register" element={<Register loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
-            <Route path="/profile" element={<Profile user={user} loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
-            <Route path="/profile/:userName" element={<Profile user={user} loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
-            <Route path="/search" element={<Search loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
-            <Route path="/results/:criteria" element={<Results loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
-            <Route path="/details/:mbid" element={<Artist loggedIn={loggedIn} dispatch={loggedInDispatch}/>}/>
-            <Route path="/privacy" element={<PrivacyPolicy loggedIn={loggedIn} dispatch={loggedInDispatch}/>} />
-            <Route path="/submit" element={<SubmitQuote user={user} loggedIn={loggedIn} dispatch={loggedInDispatch}/>} />
+            <Route path="/" element={<Home user={state.user} loggedIn={state.loggedIn} />} />
+            <Route path="/login" element={<Login loggedIn={state.loggedIn} dispatch={dispatch}/>} />
+            <Route path="/register" element={<Register loggedIn={state.loggedIn} dispatch={dispatch}/>}/>
+            <Route path="/profile" element={<Profile user={state.user} loggedIn={state.loggedIn} dispatch={dispatch}/>}/>
+            <Route path="/profile/:userName" element={<Profile user={state.user} loggedIn={state.loggedIn} dispatch={dispatch}/>}/>
+            <Route path="/search" element={<Search loggedIn={state.loggedIn} dispatch={dispatch}/>}/>
+            <Route path="/results/:criteria" element={<Results loggedIn={state.loggedIn} dispatch={dispatch}/>}/>
+            <Route path="/details/:mbid" element={<Artist loggedIn={state.loggedIn} dispatch={dispatch}/>}/>
+            <Route path="/privacy" element={<PrivacyPolicy loggedIn={state.loggedIn} dispatch={dispatch}/>} />
+            <Route path="/submit" element={<SubmitQuote user={state.user} loggedIn={state.loggedIn} dispatch={dispatch}/>} />
         </Routes>
     </BrowserRouter>
   );

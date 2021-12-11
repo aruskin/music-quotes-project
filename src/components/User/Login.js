@@ -16,7 +16,8 @@ function LoginForm({dispatch}){
                 if(user === 0) {
                     alert("Login failed, please try again")
                 } else {
-                    dispatch({type: 'login'});
+                    console.log(user);
+                    dispatch({type: 'login', payload: {username: user.username}});
                     navigate("/profile");
                 }
             })

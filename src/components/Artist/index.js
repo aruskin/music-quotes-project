@@ -24,9 +24,7 @@ function Artist({loggedIn, dispatch}){
                 let quotesFrom = [];
 
                 if(artistResult.quotesFrom.length > 0){
-                    console.log(artistResult.quotesFrom);
                     await Promise.all(artistResult.quotesFrom.map(async (item, index) => {
-                        console.log(item);
                         const quote = await quoteService.findQuoteByID(item);
                         quotesFrom.push(quote)
                     }))
@@ -57,15 +55,16 @@ function Artist({loggedIn, dispatch}){
         let artistType;
         let country;
         if(artist.type){
-            artistType = <div>Type: {artist.type}</div>
+            artistType = <div><span className="fw-bold">Type:</span> {artist.type}</div>
         }
         if(artist.country){
-            country = <div>Country: {artist.country}</div>
+            country = <div><span className="fw-bold">Country:</span> {artist.country}</div>
         }
         return(
             <div>
                 {artistType}
                 {country}
+                <div>See more on <a href={`https://musicbrainz.org/artist/${artist.id}`}>Musicbrainz</a></div>
             </div>
         )
     }
@@ -78,21 +77,16 @@ function Artist({loggedIn, dispatch}){
             <div className="col-10">
                 <h1>{artist.name} {artist.disambiguation && <span>({artist.disambiguation})</span>}</h1>
                 {displayArtistDetails()}
-                <h2>Quotes from {artist.name}</h2>
+                <br/>
+                <h2>{quotes.quotesFrom.length} quote{quotes.quotesFrom.length===1 ? '' : 's'} from {artist.name}</h2>
                 <ul className="list-group">
-                {quotes.quotesFrom.map(quote => <Quote quote={quote}/>)}
+                {quotes.quotesFrom.map(quote => <Quote quote={quote} key={quote._id}/>)}
                 </ul>
-                <h2>Quotes about {artist.name}</h2>
+                <br/>
+                <h2>{quotes.quotesAbout.length} quote{quotes.quotesAbout.length===1 ? '' : 's'} about {artist.name}</h2>
                 <ul className="list-group">
-                {quotes.quotesAbout.map(quote => <Quote quote={quote}/>)}
+                {quotes.quotesAbout.map(quote => <Quote quote={quote} key={quote._id}/>)}
                 </ul>
-                <h2>Project requirements</h2>
-                <ol>
-                   <li>Must retrieve details from the remote API based on some unique identifier provided as a parameter from the search/results page</li>
-                   <li>Must display additional related data from the local database. For instance, if you are displaying the details of a movie, some other folks might have reviewed the movie. All reviews related to the movie must be shown in all or partial form</li>
-                   <li style={{background: 'yellow'}}>Must provide links to related data/users. For instance, if you are displaying the details of a movie, and below you are displaying a list of reviews for that movie, provide links to the profile pages of folks who wrote the reviews for the movie</li>
-                   <li>Must be mapped to /details/unique identifier or /details?identifier=unique identifier where unique identifier uniquely identies the item being displayed</li>
-                </ol>
             </div>
         </div>
     )
