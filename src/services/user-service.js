@@ -54,7 +54,21 @@ const resetPassword = (newPassword) => {
     }).then(response => response.json())
 }
 
+const findAllUsers = () =>
+    fetch(USER_API)
+        .then(response => response.json())
+
+const updateUserRole = (body) => {
+    return fetch(`${USER_API}/update-role`, {
+            method: "PUT",
+            credentials: "include",
+            body: JSON.stringify(body),
+            headers: {
+                'content-type': 'application/json'
+            }
+        }).then(response => response.json())
+}
 /* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
-    register, login, logout, profile, findUserByName, resetPassword
+    register, login, logout, profile, findUserByName, resetPassword, findAllUsers, updateUserRole
 }
