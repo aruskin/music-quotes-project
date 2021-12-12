@@ -2,19 +2,53 @@ import React, {useEffect, useState} from "react";
 import {useSelector} from "react-redux";
 import NavigationSidebar from "../NavigationSidebar";
 import quoteService from "../../services/quote-service";
+import userService from "../../services/user-service";
 import Quote from "../Quote";
+
+function SpecificHomeContent({user}){
+    const [recentQuote, setRecentQuote] = useState({});
+
+    async function findMyMostRecentSubmission(){
+        let quote = {};
+        if(user){
+          let currentUser = await userService.findUserByName(user.username);
+          if(currentUser.submittedQuotes){
+            const numQuotes = currentUser.submittedQuotes.length;
+            if(numQuotes > 0){
+                quote = await quoteService.findQuoteByID(currentUser.submittedQuotes[numQuotes - 1]);
+            }
+          }
+        }
+        setRecentQuote(quote);
+    }
+
+    useEffect(() => findMyMostRecentSubmission(), []);
+
+    return(
+        <div className="mt-2">
+        <h2>My most recent submission</h2>
+        {recentQuote._id ?
+            <Quote quote={recentQuote} key={recentQuote._id}/>
+            : <p>You have not submitted any quotes.</p>}
+        </div>
+    )
+}
 
 function Home(){
     const user = useSelector((state) => state.user);
     const [quotes, setQuotes] = useState([]);
     const NQUOTES = 5;
-    useEffect(() => quoteService.findAllQuotes()
-        .then(quotes => {
-            if (quotes.length > NQUOTES) {
-                quotes = quotes.slice(0, NQUOTES);
-            }
-            setQuotes(quotes);
-        }))
+
+    useEffect(() => {
+        quoteService.findAllQuotes()
+            .then(quotes => {
+                if (quotes.length > NQUOTES) {
+                    quotes = quotes.slice(0, NQUOTES);
+                }
+                setQuotes(quotes);
+            });
+     });
+
     return(
         <div className="row mt-2">
             <div className="col-2">
@@ -23,14 +57,7 @@ function Home(){
             <div className="col-10">
             <h1>Rock Insults</h1>
             <p>A crowdsourced database of musicians talking shit about each other</p>
-            <h2>Project requirements</h2>
-            <ol>
-                <li>Must be mapped to either the root context ("/") or ("/home").</li>
-                <li>Must be the first page when visiting the website</li>
-                <li>Must display generic content for anonymous users. The content must be dynamic based on the latest data. For instance, you might display snippets and links to the most recent post, review, or member who recently joined</li>
-                <li style={{background: 'yellow'}}>Must display specific content for the logged in user. The content must be dynamic based on the most recent data entered by the logged in user. For instance, you might display snippets and links to the most recent post or review created by the logged in user</li>
-                <li style={{background: 'yellow'}}>Must be clear to what the Web site is about and must look polished and finished</li>
-            </ol>
+            {user.username ? <SpecificHomeContent user={user} /> : ''}
             <h2>Most recently submitted quotes</h2>
             <ul className="list-group">
                 {
@@ -39,7 +66,6 @@ function Home(){
                     )
                 }
             </ul>
-            {user.username ? <h2>Specific content for {user.username}</h2> : ''}
             </div>
         </div>
     )
