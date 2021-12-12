@@ -219,6 +219,7 @@ function QuoteForm(){
 
 function SubmitQuote(){
     const loggedIn = useSelector((state) => state.loggedIn);
+    const user = useSelector((state) => state.user);
     return(
         <div className="row mt-2">
             <div className="col-2">
@@ -226,7 +227,10 @@ function SubmitQuote(){
             </div>
             <div className="col-10">
                 <h1>Submit Quote</h1>
-                {loggedIn ? <QuoteForm/> : <p>You must be logged in to submit a quote</p>}
+                {loggedIn ?
+                    (user.role === 'BANNED' ? <p>You have been banned and are no longer allowed to submit quotes</p>
+                    : <QuoteForm/>)
+                    : <p>You must be logged in to submit a quote</p>}
             </div>
         </div>
     )
