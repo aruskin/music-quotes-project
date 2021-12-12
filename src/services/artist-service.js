@@ -1,5 +1,5 @@
-const ARTIST_API = "http://localhost:4000/api/artists";
-
+const CONSTANTS = require('../consts');
+const ARTIST_API = CONSTANTS.API_BASE_URL + "artists";
 
 function fetchArtistByMBID(mbid) {
     return fetch(`${ARTIST_API}/${mbid}`)

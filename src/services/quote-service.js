@@ -1,4 +1,5 @@
-const QUOTE_API = "http://localhost:4000/api/quotes";
+const CONSTANTS = require('../consts');
+const QUOTE_API = CONSTANTS.API_BASE_URL + "quotes";
 
 export const findAllQuotes = () =>
     fetch(QUOTE_API)

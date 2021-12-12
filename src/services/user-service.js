@@ -1,5 +1,5 @@
-//Code initially copied from https://github.com/jannunzi/wbdv-sp21-02-jannunzi-prototype-react/blob/main/src/services/user-service.js
-const USER_API = "http://localhost:4000/api/users";
+const CONSTANTS = require('../consts');
+const USER_API = CONSTANTS.API_BASE_URL + "users";
 
 const profile = () => {
     return fetch(`${USER_API}/profile`, {
@@ -17,7 +17,13 @@ const login = (dispatch, credentials) => {
             'content-type': 'application/json'
         }
     }).then(response => response.json())
-      .then(user => dispatch({type: 'login', payload: {username: user.username, role: user.role}}))
+      .then(user => {
+        if(user.username){
+            dispatch({type: 'login', payload: {username: user.username, role: user.role}})
+        }else{
+           return(user)
+        }
+      })
 }
 
 const register = (dispatch, credentials) => {
@@ -45,7 +51,7 @@ const findUserByName = (username) => {
 
 const resetPassword = (newPassword) => {
     return fetch(`${USER_API}/reset`, {
-        method: "POST",
+        method: "PUT",
         credentials: "include",
         body: JSON.stringify({newPassword: newPassword}),
         headers: {

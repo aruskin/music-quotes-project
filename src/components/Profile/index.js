@@ -34,17 +34,21 @@ function Profile(){
             navigate("/profile");
             userNameVar=null;
         }
+
         if(userNameVar) {
             userService.findUserByName(userNameVar)
                 .then(whoseProfile => {setWhoseProfile(whoseProfile)});
+            fetchUserQuotes(whoseProfile);
         } else if(loggedIn){
             userService.findUserByName(user.username)
                 .then(whoseProfile => {setWhoseProfile(whoseProfile)});
-        }
-        if(whoseProfile){
             fetchUserQuotes(whoseProfile);
         }
-    }, [userName, loggedIn, navigate, user.username, whoseProfile]);
+        return () => {
+            setWhoseProfile({});
+            setSubmittedQuotes([]);
+        };
+    }, [userName, loggedIn, user.username]);
 
     function displayUserInfo(){
         let accountCreationDate=new Date(whoseProfile.accountCreationDate);
