@@ -58,8 +58,8 @@ function RegistrationForm(){
             <button onClick={handleRegistration} className="btn btn-primary mt-2">
                 Register
             </button>
-            <Link to="/login">
-                        Login
+            <Link to="/login" className="btn btn-secondary mt-2 ms-2">
+                Login
             </Link>
         </form>
 

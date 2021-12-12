@@ -19,7 +19,7 @@ function SearchArtists() {
               <form onSubmit={handleSubmit}>
               <div className="input-group">
                 <input className="form-control"
-                  placeholder="keyword"
+                  placeholder="e.g., Noel Gallagher"
                   value={keyword}
                   onChange={handleChange}
                   />
