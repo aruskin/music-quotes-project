@@ -48,8 +48,7 @@ function MyProfile(){
     const user = useSelector((state) => state.user);
     return(
     <div>
-        <h1>My Profile</h1>
-        <p>Hello, {user.username}, this is your profile page!</p>
+        <h2 className="mt-2">Manage Account</h2>
         <ResetPassword/>
     </div>
     )

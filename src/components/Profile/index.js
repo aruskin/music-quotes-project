@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useParams, useNavigate} from "react-router-dom";
+import {useParams} from "react-router-dom";
 import {useSelector} from "react-redux";
 import userService from '../../services/user-service';
 import quoteService from "../../services/quote-service";
@@ -11,44 +11,38 @@ function Profile(){
     const {userName} = useParams();
     const [whoseProfile, setWhoseProfile] = useState({});
     const [submittedQuotes, setSubmittedQuotes] = useState([]);
-    let navigate = useNavigate();
     const user = useSelector((state) => state.user);
     const loggedIn = useSelector((state) => state.loggedIn);
 
-    useEffect(() => {
-        async function fetchUserQuotes(user){
-            let quotes = [];
-            if(user.submittedQuotes){
-                if(user.submittedQuotes.length > 0){
-                    await Promise.all(user.submittedQuotes.map(async (item, index) => {
-                        const quote = await quoteService.findQuoteByID(item);
-                        quotes[index] = quote;
-                    }));
-                }
+    function getProfile(username){
+        if(loggedIn && !username){
+            username = user.username;
+        }
+        return(userService.findUserByName(username))
+    }
+
+    async function fetchUserQuotes(user){
+        let quotes = [];
+        if(user.submittedQuotes){
+            if(user.submittedQuotes.length > 0){
+                await Promise.all(user.submittedQuotes.map(async (item, index) => {
+                    const quote = await quoteService.findQuoteByID(item);
+                    quotes[index] = quote;
+                }));
             }
-            setSubmittedQuotes(quotes);
         }
+        setSubmittedQuotes(quotes);
+    }
 
-        let userNameVar = userName;
-        if(userName === user.username){
-            navigate("/profile");
-            userNameVar=null;
+    useEffect(() => {
+        if(userName || loggedIn){
+            getProfile(userName)
+                .then((whoseProfile) => {
+                    fetchUserQuotes(whoseProfile);
+                    setWhoseProfile(whoseProfile)
+                });
         }
-
-        if(userNameVar) {
-            userService.findUserByName(userNameVar)
-                .then(whoseProfile => {setWhoseProfile(whoseProfile)});
-            fetchUserQuotes(whoseProfile);
-        } else if(loggedIn){
-            userService.findUserByName(user.username)
-                .then(whoseProfile => {setWhoseProfile(whoseProfile)});
-            fetchUserQuotes(whoseProfile);
-        }
-        return () => {
-            setWhoseProfile({});
-            setSubmittedQuotes([]);
-        };
-    }, [userName, loggedIn, user.username]);
+    }, []);
 
     function displayUserInfo(){
         let accountCreationDate=new Date(whoseProfile.accountCreationDate);
@@ -81,37 +75,21 @@ function Profile(){
                     </div>
                 : ''}
 
-                {loggedIn && !userName ? <MyProfile/>: ''}
-                {userName && whoseProfile.username ? <h1>User: {whoseProfile.username}</h1> : ''}
+                {whoseProfile.username && whoseProfile.username === user.username ?
+                    <h1>My Profile</h1>
+                : <h1>User: {whoseProfile.username}</h1>}
 
                 {whoseProfile.username ?
                     <div>
                         {displayUserInfo()}
-                        <h2>Submitted Quotes</h2>
+                        <h2 className="mt-2">Submitted Quotes</h2>
                         <ul className="list-group">
                             {submittedQuotes.map(quote => <Quote quote={quote} key={quote._id}/>)}
                         </ul>
                     </div>
                 : ''}
 
-                <h2>Project Requirements</h2>
-                <ol>
-                <li>Must allow users to change their personal information. If a user is logged in then they can see their profile including sensitive information such as email and phone</li>
-                <li>Must be accessible to other users including anonymous users</li>
-                <li style={{background: 'yellow'}}>Must hide personal/private information from others visiting the profile. If a user is visiting someone else's profile, then they can't see that other user's sensitive information</li>
-                <li>Must be mapped to "/profile" for displaying the profile of the currently logged in user</li>
-                <li>Must be mapped to "/profile/&#123;profileId&#125;" for displaying someone elses profile</li>
-                <li>Must group similar/related data into distinguishable groups, e.g., Following, Followers, Review, Favorites, etc.</li>
-                <li>Must display lists of snippets and links of all data related to a user. For instance, display a list of links to all the favorite movies, list of links of users they are following, etc. For instance:
-                   <ol>
-                   <li>If user is following other users, then those users must be listed in the profile and a link must navigate to that other users profile</li>
-                   <li>If the user has bookmarked something, then it should be listed in the profile and a link must navigate to that something</li>
-                   <li>If the user has commented, or reviewed, or created some content, then there must be a functionality to list a summary of that content and navigate to that content</li>
-                   <li>You decide how to present, display, format the information</li>
-                </ol>
-                </li>
-                <li>The profile page may be implemented as several pages</li>
-                </ol>
+                {whoseProfile.username === user.username ? <MyProfile/>: ''}
             </div>
         </div>
     )
