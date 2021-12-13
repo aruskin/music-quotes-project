@@ -9,7 +9,8 @@ function Quote({quote}){
     return(
         <li className="list-group-item" key={quote._id}>
             <div><h3><Link to={`/details/${quote.speaker.mbid}`}>{quote.speaker.name}</Link> on&nbsp;
-                {quote.subject.map((item, index) => <span key={index}>{index > 0 ? `, `: ``}<Link to={`/details/${item.mbid}`}>{item.name}</Link></span>)}</h3></div>
+                {quote.subject.map((item, index) => <span key={index}>{index > 0 ? `, `: ``}<Link to={`/details/${item.mbid}`}>{item.name}</Link></span>)}
+                {quote.admin.verified ? <span className="badge bg-success ms-2">Verified</span> : <span className="badge bg-warning ms-2">Verification Pending</span>}</h3></div>
             <div>{quote.text}</div>
             <br/>
             <div><span className="fw-bold">Source:</span> <a href={quote.sourceURL} target="_blank" rel="noreferrer">{quote.source}</a>
