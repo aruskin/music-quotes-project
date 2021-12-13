@@ -12,12 +12,12 @@ function ManageRoleButton(targetUser, targetRole, actionName){
     return(
         <button
             type="button"
-            className="btn btn-warning"
+            className="btn btn-outline-primary"
             onClick={handleUpdate}>{actionName}</button>
     )
 }
 
-function ManageUsers(){
+function ManageUsers({user}){
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
@@ -40,10 +40,12 @@ function ManageUsers(){
                             <th>{item.submittedQuotes.length + item.deletedQuotes}</th>
                             <th>{item.deletedQuotes}</th>
                             <th>
+                                <div className="btn-group" role="group">
                                 {item.role==='DEFAULT' && ManageRoleButton(item.username, 'BANNED', 'Ban')}
                                 {item.role==='DEFAULT' && ManageRoleButton(item.username, 'ADMIN', 'Promote')}
                                 {item.role==='BANNED' && ManageRoleButton(item.username, 'DEFAULT', 'Unban')}
-                                {item.role==='ADMIN' && ManageRoleButton(item.username, 'DEFAULT', 'Demote')}
+                                {item.role==='ADMIN' && item.username !== user.username && ManageRoleButton(item.username, 'DEFAULT', 'Demote')}
+                                </div>
                             </th>
                         </tr>
                     )
@@ -73,7 +75,7 @@ function ManageUsers(){
     return(
     <div>
     <h2>Manage Users</h2>
-        {renderUsers()}
+        {renderUsers(user)}
     </div>
     )
 }
@@ -93,7 +95,7 @@ function AdminInterface(){
             <div className="col-10">
                 <h1>Admin Interface</h1>
                 {isAdmin ?
-                    <ManageUsers/>
+                    <ManageUsers user={user}/>
                     : <p>This interface is only available to admins.</p>}
             </div>
         </div>
