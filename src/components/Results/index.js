@@ -52,9 +52,9 @@ function Results() {
           }
         return (
           <div>
-          Found {numItems} results in Musicbrainz
           <div className="table-responsive-sm">
-          <table className="table table-striped table-sm">
+          <table className="table table-sm table-hover">
+              <caption>{numItems === 25 ? `Top 25 results from Musicbrainz` : `Found {numItems} results in MusicBrainz`}</caption>
               <thead className="thead-dark">
                   <tr>
                       <th scope="col">#</th>
