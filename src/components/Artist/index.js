@@ -6,6 +6,10 @@ import quoteService from "../../services/quote-service";
 import NavigationSidebar from "../NavigationSidebar";
 import Quote from "../Quote";
 
+import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
+import {faExternalLinkAlt} from '@fortawesome/free-solid-svg-icons';
+
+
 function Artist(){
     let params = useParams();
     const [artist, setArtist] = useState({name: ''});
@@ -64,7 +68,8 @@ function Artist(){
             <div>
                 {artistType}
                 {country}
-                <div>See more on <a href={`https://musicbrainz.org/artist/${artist.id}`}>Musicbrainz</a></div>
+                <div>See more on <a href={`https://musicbrainz.org/artist/${artist.id}`} target="_blank" rel="noreferrer">
+                    Musicbrainz <FontAwesomeIcon icon={faExternalLinkAlt}/></a></div>
             </div>
         )
     }
