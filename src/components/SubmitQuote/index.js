@@ -70,7 +70,8 @@ function QuoteForm(){
                         else{
                             setMyState(oldValues => ({...oldValues, selected: event.target.value}))
                         }
-                    }}>
+                    }}
+                    disabled={items.length > 0 ? false: true}>
                     <option value="" disabled selected>Select the artist</option>
                     {items}
                 </select>
