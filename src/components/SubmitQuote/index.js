@@ -7,17 +7,17 @@ import {submitQuote} from '../../services/quote-service';
 
 
 function QuoteForm(){
-    const [speaker, setSpeaker] = useState({keyword: '', selectOptions: [], selected: null});
-    const [subjects, setSubjects] = useState([{keyword: '', selectOptions: [], selected: null}]);
+    const [speaker, setSpeaker] = useState({keyword: '', selectOptions: [], selected: ''});
+    const [subjects, setSubjects] = useState([{keyword: '', selectOptions: [], selected: ''}]);
     let [quote, setQuote] = useState({
         text: '',
         source: '',
         sourceDate: null,
-        sourceURL: null});
+        sourceURL: ''});
 
     function resetForm(event){
-        setSpeaker({keyword: '', selectOptions: [], selected: null});
-        setSubjects([{keyword: '', selectOptions: [], selected: null}]);
+        setSpeaker({keyword: '', selectOptions: [], selected: ''});
+        setSubjects([{keyword: '', selectOptions: [], selected: ''}]);
         setQuote({
                  text: '',
                  source: '',
@@ -26,7 +26,7 @@ function QuoteForm(){
     }
 
     function handleSpeakerChange(event){
-        return(setSpeaker({keyword: event.target.value, selectOptions: [], selected: null}))
+        return(setSpeaker({keyword: event.target.value, selectOptions: [], selected: ''}))
     }
 
     async function handleSpeakerSearch(event){
@@ -72,7 +72,7 @@ function QuoteForm(){
                         }
                     }}
                     disabled={items.length > 0 ? false: true}>
-                    <option value="" disabled selected>Select the artist</option>
+                    <option value="" disabled>Select the artist</option>
                     {items}
                 </select>
             </div>
@@ -83,7 +83,7 @@ function QuoteForm(){
         function handleSubjectChange(event){
             return(setSubjects(oldValues =>
                 [...oldValues.slice(0, index),
-                {keyword: event.target.value, selectOptions: [], selected: null},
+                {keyword: event.target.value, selectOptions: [], selected: ''},
                 ...oldValues.slice(index+1)
                 ]))
          }
@@ -94,7 +94,7 @@ function QuoteForm(){
             const artistResults = await musicbrainzService.fetchArtistsByName(artist);
             return(setSubjects(oldValues =>
                  [...oldValues.slice(0, index),
-                 {keyword: artist, selectOptions: artistResults, selected: null},
+                 {keyword: artist, selectOptions: artistResults, selected: ''},
                  ...oldValues.slice(index+1)
                  ]
             ))
@@ -120,7 +120,7 @@ function QuoteForm(){
     function appendInput(event){
         event.preventDefault();
         return(setSubjects(oldValues => [...oldValues,
-            {keyword: "", selectOptions: [], selected: null}]))
+            {keyword: "", selectOptions: [], selected: ''}]))
     }
 
     function removeInput(event){
@@ -145,6 +145,7 @@ function QuoteForm(){
             <label htmlFor="quoteText">Quote*</label>
             <textarea
                 className="form-control"
+                placeholder="Some insulting quote about some musician"
                 id="quoteText"
                 rows="3"
                 required
@@ -175,14 +176,15 @@ function QuoteForm(){
                     setQuote(oldValues => ({...oldValues, sourceDate: event.target.value}))}/>
         </div>
         <div className="form-group">
-            <label htmlFor="quoteURL">Source URL</label>
+            <label htmlFor="quoteURL">Source URL*</label>
             <input className="form-control"
             type="url"
             id="quoteURL"
             placeholder="http://www.example.com/noel-gallagher-interview"
             value={quote.sourceURL}
             onChange={(event) =>
-                setQuote(oldValues => ({...oldValues, sourceURL: event.target.value}))}/>
+                setQuote(oldValues => ({...oldValues, sourceURL: event.target.value}))}
+            required/>
         </div>
         <label htmlFor="speakerGroup">Speaker*</label>
         <div className="row align-items-center me-3" id="speakerGroup">
