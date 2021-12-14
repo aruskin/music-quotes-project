@@ -101,17 +101,17 @@ function QuoteForm(){
         }
         return(
             <div className="row mt-2">
-                <div className="form-group col">
+                <div className="input-group col mb-3 me-0">
                     <input className="form-control"
                         id={`subjectSearch${index}`}
                         placeholder="e.g., Damon Albarn"
                         value={subjects[index].keyword}
                         onChange={handleSubjectChange}/>
+                    <button
+                        className="btn btn-secondary"
+                        onClick={handleSubjectSearch}>Search
+                    </button>
                 </div>
-                <button
-                    className="btn btn-secondary col"
-                    onClick={handleSubjectSearch}>Search
-                </button>
                 {renderSelectOptions(subjects, setSubjects, `subjectSelect`+index, index)}
             </div>
         )
@@ -121,6 +121,10 @@ function QuoteForm(){
         return(setSubjects(oldValues => [...oldValues,
             {keyword: "", selectOptions: [], selected: null}]))
     }
+
+    function removeInput(event){
+        return(setSubjects(oldValues => [...oldValues.slice(0, oldValues.length-1)]))
+     }
 
     function handleSubmit(event){
         event.preventDefault();
@@ -179,8 +183,8 @@ function QuoteForm(){
                 setQuote(oldValues => ({...oldValues, sourceURL: event.target.value}))}/>
         </div>
         <label htmlFor="speakerGroup">Speaker*</label>
-        <div className="row align-items-center" id="speakerGroup">
-            <div className="form-group col">
+        <div className="row align-items-center me-3" id="speakerGroup">
+            <div className="input-group col mb-3">
                 <input className="form-control"
                     id="speakerSearch"
                     placeholder="e.g., Noel Gallagher"
@@ -188,10 +192,10 @@ function QuoteForm(){
                     onChange={handleSpeakerChange}
                     type="text"
                     required/>
-            </div>
-            <button
-                className="btn btn-secondary col"
-                onClick={handleSpeakerSearch}>Search</button>
+                <button
+                    className="btn btn-secondary"
+                    onClick={handleSpeakerSearch}>Search</button>
+                </div>
             {renderSelectOptions(speaker, setSpeaker, `speakerSelect`)}
         </div>
         <label htmlFor="subjectGroup">Subject</label>
@@ -201,7 +205,12 @@ function QuoteForm(){
         <div>
             <button
                 className="btn btn-secondary"
-                onClick={appendInput}>Add Subject</button>
+                onClick={appendInput}>Add Subject
+            </button>
+            <button
+                className="btn btn-secondary ms-2"
+                onClick={removeInput}>Remove Subject
+            </button>
         </div>
         <div className="mt-2">
             <button
