@@ -118,11 +118,13 @@ function QuoteForm(){
     }
 
     function appendInput(event){
+        event.preventDefault();
         return(setSubjects(oldValues => [...oldValues,
             {keyword: "", selectOptions: [], selected: null}]))
     }
 
     function removeInput(event){
+        event.preventDefault();
         return(setSubjects(oldValues => [...oldValues.slice(0, oldValues.length-1)]))
      }
 
