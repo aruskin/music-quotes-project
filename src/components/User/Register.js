@@ -28,7 +28,7 @@ function RegistrationForm(){
     }
     return(
         <form>
-            <div className="form-group">
+            <div className="form-group mb-0">
                 <label htmlFor="registerUsername">Username</label>
                 <input
                     value={credentials.username}
@@ -37,7 +37,7 @@ function RegistrationForm(){
                     placeholder="username"
                     id="registerUsername"/>
             </div>
-            <div className="form-group">
+            <div className="form-group mt-2">
                 <label htmlFor="registerPassword1">Password</label>
                 <input
                     value={credentials.password}
@@ -46,7 +46,7 @@ function RegistrationForm(){
                     placeholder="password"
                     type="password"
                     id="registerPassword1"/>
-                <label htmlFor="registerPassword2">Validate password</label>
+                <label htmlFor="registerPassword2" className="mt-2">Validate password</label>
                 <input
                     value={credentials.validatedPassword}
                     onChange={(e) => {setCredentials({...credentials, validatedPassword: e.target.value})}}
