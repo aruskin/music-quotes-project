@@ -44,14 +44,27 @@ function ResetPassword(){
     )
 }
 
-function MyProfile(){
-    const user = useSelector((state) => state.user);
-    return(
-    <div>
-        <h2 className="mt-2">Manage Account</h2>
-        <ResetPassword/>
-    </div>
-    )
+function MyProfile(whoseProfile){
+    if(whoseProfile.user.username){
+        return(
+            <div>
+                <h2 className="mt-2">Manage Account</h2>
+                <ResetPassword/>
+                {whoseProfile.user.role !== 'DEFAULT' ?
+                    <><h2 className="mt-2">Just for you</h2>
+                    {whoseProfile.user.role === 'ADMIN' && whoseProfile.user.adminContact ?
+                    <div>Your email: {whoseProfile.user.adminContact}</div>
+                    : ''}
+                    {whoseProfile.user.role === 'BANNED' && whoseProfile.user.banReason ?
+                    <div>You were banned for: {whoseProfile.user.banReason}</div>
+                     : ''}</>
+                : ''}
+            </div>
+            )
+    }else{
+        return(null)
+    }
+
 }
 
 export default MyProfile;

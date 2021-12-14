@@ -75,9 +75,9 @@ function Profile(){
                     </div>
                 : ''}
 
-                {whoseProfile.username && whoseProfile.username === user.username ?
-                    <h1>My Profile</h1>
-                : <h1>User: {whoseProfile.username}</h1>}
+                {whoseProfile.username ?
+                 (whoseProfile.username === user.username ?<h1>My Profile</h1> : <h1>User: {whoseProfile.username}</h1>)
+                 : ''}
 
                 {whoseProfile.username ?
                     <div>
@@ -89,7 +89,7 @@ function Profile(){
                     </div>
                 : ''}
 
-                {whoseProfile.username === user.username ? <MyProfile/>: ''}
+                {whoseProfile.username === user.username ? <MyProfile user={whoseProfile}/>: ''}
             </div>
         </div>
     )
