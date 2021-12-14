@@ -47,7 +47,7 @@ function Home(){
                 }
                 setQuotes(quotes);
             });
-     });
+     }, []);
 
     return(
         <div className="row mt-2">
