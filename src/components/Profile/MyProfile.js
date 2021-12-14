@@ -1,6 +1,5 @@
 import React, {useState} from "react";
 import userService from '../../services/user-service';
-import {useSelector} from "react-redux";
 
 function ResetPassword(){
     const [password, setPassword] = useState({newPassword: '', validatePassword: ''});
