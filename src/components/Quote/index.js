@@ -1,15 +1,27 @@
 import React from "react";
 import {Link} from "react-router-dom";
+import quoteService from "../../services/quote-service";
 
 import {FontAwesomeIcon} from '@fortawesome/react-fontawesome';
 import {faExternalLinkAlt} from '@fortawesome/free-solid-svg-icons';
 
 
-function Quote({quote}){
+function Quote({quote, manage=false}){
     function displayDate(datestring){
         let date=new Date(datestring);
         return(date.toDateString())
     }
+
+    function verifyQuote(event){
+        event.preventDefault();
+        quoteService.verifyQuote(quote._id);
+    }
+
+    function deleteQuote(event){
+        event.preventDefault();
+        quoteService.deleteQuote(quote._id);
+    }
+
     return(
         <li className="list-group-item d-flex justify-content-between align-items-start" key={quote._id}>
             <div className="ms-2 me-auto">
@@ -23,7 +35,17 @@ function Quote({quote}){
             <div><span className="fw-bold">Submitted by:</span> <Link to={`/profile/${quote.admin.submittedBy.username}`}>{quote.admin.submittedBy.username}</Link></div>
             <div className="text-muted">Submission date: {quote.admin.submissionDate}</div>
             </div>
-            {quote.admin.verified ? <span className="badge bg-success rounded-pill ms-2 d-none d-md-block">Verified</span> : <span className="badge bg-warning rounded-pill ms-2 d-none d-md-block">Verification Pending</span>}
+            {manage ?
+                <>
+                <button className="btn btn-success"
+                        onClick={verifyQuote}>Verify</button>
+                <button className="btn btn-warning ms-2"
+                        onClick={deleteQuote}>Delete</button>
+                </>
+                : (quote.admin.verified ?
+                    <span className="badge bg-success rounded-pill ms-2 d-none d-md-block">Verified</span>
+                    : <span className="badge bg-warning rounded-pill ms-2 d-none d-md-block">Verification Pending</span>
+                    )}
         </li>
     )
 }

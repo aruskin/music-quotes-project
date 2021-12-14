@@ -29,10 +29,10 @@ export const deleteQuote = (id) =>
     })
         .then(response => response.json())
 
-export const verifyQuote = (quote) =>
-    fetch(QUOTE_API, {
+export const verifyQuote = (id) =>
+    fetch(`${QUOTE_API}/verify`, {
             method: 'PUT',
-            body: JSON.stringify(quote),
+            body: JSON.stringify({id: id}),
             credentials: 'include',
             headers: {
                 'content-type': 'application/json'
@@ -41,5 +41,5 @@ export const verifyQuote = (quote) =>
 
 /* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
 export default {
-    findAllQuotes, submitQuote, findQuoteByID
+    findAllQuotes, submitQuote, findQuoteByID, deleteQuote, verifyQuote
 }

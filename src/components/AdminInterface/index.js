@@ -3,22 +3,28 @@ import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
 import NavigationSidebar from "../NavigationSidebar";
 import userService from '../../services/user-service';
-
-function ManageRoleButton(targetUser, targetRole, actionName){
-    function handleUpdate(event){
-        event.preventDefault();
-        userService.updateUserRole({username: targetUser, role: targetRole})
-    }
-    return(
-        <button
-            type="button"
-            className="btn btn-outline-primary"
-            onClick={handleUpdate}>{actionName}</button>
-    )
-}
+import quoteService from "../../services/quote-service";
+import Quote from "../Quote";
 
 function ManageUsers({user}){
     const [users, setUsers] = useState([]);
+
+    function ManageRoleButton(targetUser, targetRole, actionName, index){
+        function handleUpdate(event){
+            event.preventDefault();
+            userService.updateUserRole({username: targetUser, role: targetRole}).
+                then(() =>
+                    setUsers(oldValues => [...oldValues.slice(0, index),
+                                            {...oldValues[index], role: targetRole},
+                                            ...oldValues.slice(index+1)]));
+        }
+        return(
+            <button
+                type="button"
+                className="btn btn-outline-primary"
+                onClick={handleUpdate}>{actionName}</button>
+        )
+    }
 
     useEffect(() => {
         userService.findAllUsers()
@@ -32,6 +38,7 @@ function ManageUsers({user}){
             items = users
                 .map(function(item, index){
                     var profileURL = "/profile/" + item.username;
+                    var banReason = '';
                     return(
                         <tr key={index}>
                             <th><Link to={profileURL}>{item.username}</Link></th>
@@ -40,11 +47,15 @@ function ManageUsers({user}){
                             <th>{item.submittedQuotes.length + item.deletedQuotes}</th>
                             <th>{item.deletedQuotes}</th>
                             <th>
-                                <div className="btn-group" role="group">
-                                {item.role==='DEFAULT' && ManageRoleButton(item.username, 'BANNED', 'Ban')}
-                                {item.role==='DEFAULT' && ManageRoleButton(item.username, 'ADMIN', 'Promote')}
-                                {item.role==='BANNED' && ManageRoleButton(item.username, 'DEFAULT', 'Unban')}
-                                {item.role==='ADMIN' && item.username !== user.username && ManageRoleButton(item.username, 'DEFAULT', 'Demote')}
+                                <div className='btn-group-vertical'>
+                                {item.role==='DEFAULT' &&
+                                    ManageRoleButton(item.username, 'BANNED', 'Ban', index)}
+                                {item.role==='DEFAULT' &&
+                                    ManageRoleButton(item.username, 'ADMIN', 'Promote', index)}
+                                {item.role==='BANNED' &&
+                                    ManageRoleButton(item.username, 'DEFAULT', 'Unban', index)}
+                                {item.role==='ADMIN' && item.username !== user.username &&
+                                    ManageRoleButton(item.username, 'DEFAULT', 'Demote', index)}
                                 </div>
                             </th>
                         </tr>
@@ -53,8 +64,8 @@ function ManageUsers({user}){
         }
         return(
             <div className="table-responsive-sm">
-                    <table className="table table-striped table-sm">
-                        <thead>
+                    <table className="table table-sm table-hover">
+                        <thead className="thead-dark">
                             <tr>
                                 <th scope="col">Username</th>
                                 <th scope="col">Role</th>
@@ -80,8 +91,28 @@ function ManageUsers({user}){
     )
 }
 
-function VerifyQuotes(){
+function ManageQuotes(){
+    const [quotes, setQuotes] = useState([]);
 
+    useEffect(() => {
+        quoteService.findAllQuotes()
+            .then(quotes => quotes.filter(quote => !quote.admin.verified))
+            .then(quotes => setQuotes(quotes));
+         return () => {setQuotes([])}
+    }, [])
+
+    return(
+        <div>
+        <h2>Manage Quotes</h2>
+        <ul className="list-group">
+            {
+                quotes.map(quote =>
+                    <Quote quote={quote} manage={true} key={quote._id}/>
+                )
+            }
+        </ul>
+        </div>
+    )
 }
 
 function AdminInterface(){
@@ -95,7 +126,10 @@ function AdminInterface(){
             <div className="col-10">
                 <h1>Admin Interface</h1>
                 {isAdmin ?
+                    <>
                     <ManageUsers user={user}/>
+                    <ManageQuotes />
+                    </>
                     : <p>This interface is only available to admins.</p>}
             </div>
         </div>
