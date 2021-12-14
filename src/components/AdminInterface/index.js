@@ -12,8 +12,8 @@ function ManageUsers({user}){
     function ManageRoleButton(targetUser, targetRole, actionName, index){
         function handleUpdate(event){
             event.preventDefault();
-            userService.updateUserRole({username: targetUser, role: targetRole}).
-                then(() =>
+            userService.updateUserRole({username: targetUser, role: targetRole})
+                .then(() =>
                     setUsers(oldValues => [...oldValues.slice(0, index),
                                             {...oldValues[index], role: targetRole},
                                             ...oldValues.slice(index+1)]));
@@ -38,14 +38,13 @@ function ManageUsers({user}){
             items = users
                 .map(function(item, index){
                     var profileURL = "/profile/" + item.username;
-                    var banReason = '';
                     return(
                         <tr key={index}>
                             <th><Link to={profileURL}>{item.username}</Link></th>
-                            <th>{item.role}</th>
-                            <th>{item.accountCreationDate}</th>
-                            <th>{item.submittedQuotes.length + item.deletedQuotes}</th>
-                            <th>{item.deletedQuotes}</th>
+                            <th className="p-2 fw-normal">{item.role}</th>
+                            <th className="p-2 fw-normal">{item.accountCreationDate}</th>
+                            <th className="p-2 fw-normal text-end">{item.submittedQuotes.length + item.deletedQuotes}</th>
+                            <th className="p-2 fw-normal text-end">{item.deletedQuotes}</th>
                             <th>
                                 <div className='btn-group-vertical'>
                                 {item.role==='DEFAULT' &&

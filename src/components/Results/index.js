@@ -40,12 +40,12 @@ function Results() {
                var detailsURL = "/details/" + item.id
                return(
                    <tr key={index}>
-                        <th scope="row">{index + 1}</th>
-                        <th>{item.name}</th>
-                        <th>{item.disambiguation}</th>
-                        <th>{item.country}</th>
-                        <th>{item.quotesFrom}</th>
-                        <th>{item.quotesAbout}</th>
+                        <th scope="row" className="p-2 text-end">{index + 1}</th>
+                        <th className="p-2">{item.name}</th>
+                        <th className="p-2 fw-normal">{item.disambiguation}</th>
+                        <th className="p-2 fw-normal">{item.country}</th>
+                        <th className="p-2 fw-normal text-end">{item.quotesFrom}</th>
+                        <th className="p-2 fw-normal text-end">{item.quotesAbout}</th>
                         <th><Link to={detailsURL} type="button" className="btn btn-link">See Details</Link></th>
                    </tr>)
                  });
@@ -53,7 +53,7 @@ function Results() {
         return (
           <div>
           <div className="table-responsive-sm">
-          <table className="table table-sm table-hover">
+          <table className="table table-sm table-hover table-bordered">
               <caption>{numItems === 25 ? `Top 25 results from Musicbrainz` : `Found {numItems} results in MusicBrainz`}</caption>
               <thead className="thead-dark">
                   <tr>
@@ -61,8 +61,8 @@ function Results() {
                       <th scope="col">Name</th>
                       <th scope="col">Disambiguation</th>
                       <th scope="col">Country</th>
-                      <th scope="col">Quotes From</th>
-                      <th scope="col">Quotes About</th>
+                      <th scope="col">Quotes from</th>
+                      <th scope="col">Quotes about</th>
                       <th scope="col"></th>
                   </tr>
               </thead>
